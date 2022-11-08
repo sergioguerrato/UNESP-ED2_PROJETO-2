@@ -1,5 +1,5 @@
 /*** Sérgio Paulo Guerrato Alves - BCC UNESP - Rio Claro ***/
-/*** Project 2: Files - Compression and Dinamic Recovery ***/
+/*** Project 2: Files - Dynamic Compression and Recovery ***/
 
 #include <stdbool.h>
 #include <stdio.h>
