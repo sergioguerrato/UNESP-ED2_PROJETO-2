@@ -9,7 +9,6 @@
 /**Functions**/
 void f_insert(FILE *);
 void f_search(void);
-void f_sort(FILE *);
 
 /*=*=*= MAIN =*=*=*/
 int main() {
@@ -78,13 +77,11 @@ void f_insert(FILE *insert) {
     exit(-3);
   }
 
-  /** Open data.bin to update, if don't exist, create **/
+  /** Open index.bin to append, if don't exist, create **/
   FILE *index;
-  if ((index = fopen("index.bin", "r+b")) == NULL) {
-    if ((index = fopen("index.bin", "w+b")) == NULL) {
+  if ((index = fopen("index.bin", "a+b")) == NULL) {
       fprintf(stderr, "Index file, opening error.\n\n");
       exit(-3);
-    }
   }
 
 
@@ -190,19 +187,7 @@ void f_insert(FILE *insert) {
   }
 
   fclose(data);
-  f_sort(index);
   fclose(index);
-}
-
-void f_sort(FILE *index) {
-  
-  /** Open data.bin to read **/
-  FILE *data;
-  if ((data = fopen("data.bin", "r+b")) == NULL) {
-    fprintf(stderr, "Data file, opening error. File must not exist\n\n");
-    exit(-4);
-  }
-
 }
 
 void f_search()
@@ -250,7 +235,7 @@ void f_search()
  fseek(index, 0, SEEK_END);
  int n = ftell(index);
  n = n / 22;
- printf("\n\nN: %d\n", n);
+ //printf("\n\nN: %d\n", n);
  fseek(index, 0 , SEEK_SET);
  /** Found n value! **/
  getchar();
@@ -286,13 +271,6 @@ void f_search()
   
   if (num > 0) {
   num--;
-  //num = num;
-
-  /* Preciso comprar o selecionado no busca_p com o index */
-
-  /*** GET/READ THE REGISTER (SELECTED BY USER) FROM BUSCA_P.BIN ***/
-  //reg_b[num].cod_cli
-  //reg_b[num].cod_vei
 
   char aux_buff1[12];
   char aux_buff2[8];
@@ -313,10 +291,8 @@ void f_search()
 	getchar();
     if ((strcmp(reg_i[i].cod_cli, aux_buff1) == 0) && (strcmp(reg_i[i].cod_vei, aux_buff2) == 0))  {
     
-      printf("\n\n\nOKKKKK\n");
-      getchar();
 	  int byteos = reg_i[i].bos;
-	  printf("\n\n BYTEOS: %d\n", byteos);
+	  printf("\n\n BYTE OF SET (DATA.BIN): %d\n", byteos);
 	  getchar();
       
       fseek(data, byteos, SEEK_SET);
@@ -326,34 +302,13 @@ void f_search()
       int position = ftell(data); /** Store atual location **/
       fread(&c, 1 * sizeof(char), 1, data); /** Read length **/
       int len = c - '0'; /** Convert to int **/
-      //fseek(data, position, SEEK_SET); /** Retun to previus byte of set **/
       fread(buffer, sizeof(char) * len, 1, data); /** Read the registration on a buffer **/
 
-      //printf("\n\nKEY: %d %s %s", byteos, reg[num].cod_cli, reg[num].cod_vei);
+      printf("\n\nSEARCHING ON DATA.BIN\n");
       printf("\n\nSelected Register Searched by KEY: %s\n", buffer);
-    getchar();
+      getchar();
+      break;
       }
     }
-  /*
-  fseek(index, num, SEEK_SET);
-  
-  int byteos;
-  fread(&byteos, 1 * sizeof(int), 1, index);
-  
-
-  fseek(data, byteos, SEEK_SET);
-
-  char c;
-  char buffer[125];
-  int position = ftell(data); /** Store atual location **
-  fread(&c, 1 * sizeof(char), 1, data); /** Read length **
-  int len = c - '0'; /** Convert to int **
-  fseek(data, position, SEEK_SET); /** Retun to previus byte of set **
-  fread(buffer, sizeof(char) * len, 1, data); /** Read the registration on a buffer **
- 
-  //printf("\n\nKEY: %d %s %s", byteos, reg[num].cod_cli, reg[num].cod_vei); 
-  printf("\n\nSelected Register Searched by KEY: %s\n", buffer);
-  getchar();
-  }*/
  }
 }
